@@ -2,11 +2,14 @@
 
 ## Project Overview
 
-This project implements a smart contract called "SplitBits" for managing group expenses on the blockchain. It allows users to record debts, settle payments, and keep track of who owes whom. The contract uses a custom ERC20 token called "bobToken" for settlements.
+![image](https://github.com/user-attachments/assets/6b625de6-3ff7-4177-a31e-7af35ce207a1)
+
+
+This project implements a smart contract called "SplitBits" for managing group expenses on the blockchain. It allows users to record debts, settle payments, and keep track of who owes whom. The contract uses $BOB for settlements.
 
 Key features:
 1. Record debts between users
-2. Settle debts using the bobToken
+2. Settle debts using the $BOB
 3. View debts owed to a user
 4. View debts a user needs to settle
 5. Easily understand who owes whom :)
