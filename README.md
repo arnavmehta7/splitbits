@@ -1,80 +1,67 @@
-# 🏗 Scaffold-ETH 2
+# SplitBits Project Explanation
 
-<h4 align="center">
-  <a href="https://docs.scaffoldeth.io">Documentation</a> |
-  <a href="https://scaffoldeth.io">Website</a>
-</h4>
+## Project Overview
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+This project implements a smart contract called "SplitBits" for managing group expenses on the blockchain. It allows users to record debts, settle payments, and keep track of who owes whom. The contract uses a custom ERC20 token called "bobToken" for settlements.
 
-⚙️ Built using NextJS, RainbowKit, Hardhat, Wagmi, Viem, and Typescript.
+Key features:
+1. Record debts between users
+2. Settle debts using the bobToken
+3. View debts owed to a user
+4. View debts a user needs to settle
+5. Easily understand who owes whom :)
 
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
+## Smart Contract Explanation
 
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/1171422a-0ce4-4203-bcd4-d2d1941d198b)
+The `SplitBits` contract is written in Solidity and uses OpenZeppelin's SafeERC20 library for secure token transfers.
 
-## Requirements
+### Main Components
 
-Before you begin, you need to install the following tools:
+1. **Debt Struct**: Represents a debt with fields for debtor, creditor, amount, and settlement status.
 
-- [Node (>= v18.17)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
-- [Git](https://git-scm.com/downloads)
+2. **State Variables**:
+   - `bobToken`: The ERC20 token used for settlements.
+   - `debtsOwed`: Mapping of creditor addresses to arrays of debts owed to them.
+   - `debtsToSettle`: Mapping of debtor addresses to arrays of debts they need to settle.
 
-## Quickstart
+3. **Key Functions**:
+   - `recordDebt`: Allows a user to record a debt owed by another user.
+   - `settleDebt`: Enables a debtor to settle a specific debt by transferring bobTokens.
+   - `getDebtsOwed` and `getDebtsToSettle`: View functions to retrieve debt information.
 
-To get started with Scaffold-ETH 2, follow the steps below:
+### Function Details
 
-1. Clone this repo & install dependencies
+1. `recordDebt(address debtor, uint256 amount)`:
+   - Records a new debt from the debtor to the caller (creditor).
+   - Adds the debt to both `debtsOwed` and `debtsToSettle` mappings.
+   - Emits a `DebtRecorded` event.
 
-```
-git clone https://github.com/scaffold-eth/scaffold-eth-2.git
-cd scaffold-eth-2
-yarn install
-```
+2. `settleDebt(address creditor, uint256 debtIndex)`:
+   - Allows a debtor to settle a specific debt.
+   - Marks the debt as settled in both mappings.
+   - Transfers bobTokens from the debtor to the creditor.
+   - Emits a `DebtSettled` event.
 
-2. Run a local network in the first terminal:
+3. View functions:
+   - `getDebtsOwed`: Returns all debts owed to a specific user.
+   - `getDebtsToSettle`: Returns all debts a specific user needs to settle.
 
-```
-yarn chain
-```
+## Future TODOs
 
-This command starts a local Ethereum network using Hardhat. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `hardhat.config.ts`.
+1. **Description for each debt/payment**:
+   - Add a `description` field to the `Debt` struct.
+   - Modify the `recordDebt` function to include a description parameter.
+   - Update relevant functions and events to incorporate the description.
 
-3. On a second terminal, deploy the test contract:
+2. **Escrow for bulk payments to everyone**:
+   - Implement an escrow mechanism to hold funds for multiple debt settlements.
+   - Create functions for depositing into escrow and releasing funds to creditors.
+   - Add safety measures to ensure proper fund distribution.
 
-```
-yarn deploy
-```
+3. **Ability to create new groups and assign emails/names alongside**:
+   - Implement a `Group` struct to represent expense-sharing groups.
+   - Create functions for group creation, member addition, and management.
+   - Associate email addresses and names with group members for easier identification.
+   - Modify debt recording and settlement to work within group contexts.
 
-This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
-
-4. On a third terminal, start your NextJS app:
-
-```
-yarn start
-```
-
-Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
-
-Run smart contract test with `yarn hardhat:test`
-
-- Edit your smart contract `YourContract.sol` in `packages/hardhat/contracts`
-- Edit your frontend in `packages/nextjs/pages`
-- Edit your deployment scripts in `packages/hardhat/deploy`
-
-## Documentation
-
-Visit our [docs](https://docs.scaffoldeth.io) to learn how to start building with Scaffold-ETH 2.
-
-To know more about its features, check out our [website](https://scaffoldeth.io).
-
-## Contributing to Scaffold-ETH 2
-
-We welcome contributions to Scaffold-ETH 2!
-
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
+By implementing these TODOs, the SplitBits contract will become more feature-rich and user-friendly, providing a comprehensive solution for group expense management on the blockchain.

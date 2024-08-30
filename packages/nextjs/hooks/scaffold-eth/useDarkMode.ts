@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocalStorage, useMediaQuery, useReadLocalStorage } from "usehooks-ts";
 
-const COLOR_SCHEME_QUERY = "(prefers-color-scheme: dark)";
+const COLOR_SCHEME_QUERY = "(prefers-color-scheme: white)";
 
 interface UseDarkModeOutput {
   isDarkMode: boolean;

@@ -64,7 +64,7 @@ export const Header = () => {
       <div className="navbar-start w-auto lg:w-1/2">
         <Link href="/" passHref className="hidden lg:flex items-center gap-2 ml-4 mr-6 shrink-0">
           <div className="flex flex-col">
-            <span className="font-bold leading-tight">Splitbitts</span>
+            <span className="font-bold leading-tight">Splitbits</span>
             <span className="text-xs">Manage and Track your Group Expenses</span>
           </div>
         </Link>
