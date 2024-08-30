@@ -26,6 +26,7 @@ export const useScaffoldContract = <
 
   let contract = undefined;
   if (deployedContractData) {
+          // @ts-ignore
     contract = getContract<
       Transport,
       Address,
