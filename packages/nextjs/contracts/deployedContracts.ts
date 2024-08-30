@@ -7,128 +7,278 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   111: {
     YourContract: {
-      address: "0x581510dE04cCa8bea486d48cAb3983D16F7D58B6",
+      address: "0x6E53902212022dC47757DE75bA8277fD35A08c8A",
       abi: [
         {
-          inputs: [
+          "inputs": [
             {
-              internalType: "address",
-              name: "_minter",
-              type: "address",
-            },
+              "internalType": "address",
+              "name": "_bobTokenAddress",
+              "type": "address"
+            }
           ],
-          stateMutability: "nonpayable",
-          type: "constructor",
+          "stateMutability": "nonpayable",
+          "type": "constructor"
         },
         {
-          inputs: [
+          "anonymous": false,
+          "inputs": [
             {
-              internalType: "uint256",
-              name: "requested",
-              type: "uint256",
+              "indexed": true,
+              "internalType": "address",
+              "name": "creditor",
+              "type": "address"
             },
             {
-              internalType: "uint256",
-              name: "available",
-              type: "uint256",
+              "indexed": true,
+              "internalType": "address",
+              "name": "debtor",
+              "type": "address"
             },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
           ],
-          name: "InsufficientBalance",
-          type: "error",
+          "name": "DebtRecorded",
+          "type": "event"
         },
         {
-          anonymous: false,
-          inputs: [
+          "anonymous": false,
+          "inputs": [
             {
-              indexed: false,
-              internalType: "address",
-              name: "from",
-              type: "address",
+              "indexed": true,
+              "internalType": "address",
+              "name": "creditor",
+              "type": "address"
             },
             {
-              indexed: false,
-              internalType: "address",
-              name: "to",
-              type: "address",
+              "indexed": true,
+              "internalType": "address",
+              "name": "debtor",
+              "type": "address"
             },
             {
-              indexed: false,
-              internalType: "uint256",
-              name: "amount",
-              type: "uint256",
-            },
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
           ],
-          name: "Sent",
-          type: "event",
+          "name": "DebtSettled",
+          "type": "event"
         },
         {
-          inputs: [
+          "inputs": [],
+          "name": "bobToken",
+          "outputs": [
             {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
+              "internalType": "contract IERC20",
+              "name": "",
+              "type": "address"
+            }
           ],
-          name: "balances",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
+          "stateMutability": "view",
+          "type": "function"
         },
         {
-          inputs: [
+          "inputs": [
             {
-              internalType: "address",
-              name: "receiver",
-              type: "address",
+              "internalType": "address",
+              "name": "",
+              "type": "address"
             },
             {
-              internalType: "uint256",
-              name: "amount",
-              type: "uint256",
-            },
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
           ],
-          name: "mint",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
+          "name": "debtsOwed",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "debtor",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "creditor",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "settled",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
         },
         {
-          inputs: [],
-          name: "minter",
-          outputs: [
+          "inputs": [
             {
-              internalType: "address",
-              name: "",
-              type: "address",
+              "internalType": "address",
+              "name": "",
+              "type": "address"
             },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
           ],
-          stateMutability: "view",
-          type: "function",
+          "name": "debtsToSettle",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "debtor",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "creditor",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "settled",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
         },
         {
-          inputs: [
+          "inputs": [
             {
-              internalType: "address",
-              name: "receiver",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "amount",
-              type: "uint256",
-            },
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
           ],
-          name: "send",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
+          "name": "getDebtsOwed",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "debtor",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "creditor",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "settled",
+                  "type": "bool"
+                }
+              ],
+              "internalType": "struct MiniSplitwise.Debt[]",
+              "name": "",
+              "type": "tuple[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
         },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "getDebtsToSettle",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "debtor",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "creditor",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "settled",
+                  "type": "bool"
+                }
+              ],
+              "internalType": "struct MiniSplitwise.Debt[]",
+              "name": "",
+              "type": "tuple[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "debtor",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "recordDebt",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "creditor",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "debtIndex",
+              "type": "uint256"
+            }
+          ],
+          "name": "settleDebt",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
       ],
       inheritedFunctions: {},
     },

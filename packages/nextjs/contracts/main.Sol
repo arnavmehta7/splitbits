@@ -1,0 +1,76 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
+contract MiniSplitwise {
+    using SafeERC20 for IERC20;
+
+    IERC20 public bobToken;
+
+    struct Debt {
+        address debtor;
+        address creditor;
+        uint256 amount;
+        bool settled;
+    }
+
+    mapping(address => Debt[]) public debtsOwed; // Debts owed to the user
+    mapping(address => Debt[]) public debtsToSettle; // Debts the user needs to settle
+
+    event DebtRecorded(address indexed creditor, address indexed debtor, uint256 amount);
+    event DebtSettled(address indexed creditor, address indexed debtor, uint256 amount);
+
+    constructor(address _bobTokenAddress) {
+        bobToken = IERC20(_bobTokenAddress);
+    }
+
+    function recordDebt(address debtor, uint256 amount) external {
+        require(debtor != msg.sender, "Cannot record debt to yourself");
+        require(amount > 0, "Debt amount must be greater than 0");
+
+        Debt memory newDebt = Debt({
+            debtor: debtor,
+            creditor: msg.sender,
+            amount: amount,
+            settled: false
+        });
+
+        debtsOwed[msg.sender].push(newDebt);
+        debtsToSettle[debtor].push(newDebt);
+
+        emit DebtRecorded(msg.sender, debtor, amount);
+    }
+
+    function settleDebt(address creditor, uint256 debtIndex) external {
+        require(debtIndex < debtsToSettle[msg.sender].length, "Invalid debt index");
+        Debt storage debt = debtsToSettle[msg.sender][debtIndex];
+        
+        require(debt.debtor == msg.sender, "You are not the debtor for this debt");
+        require(!debt.settled, "Debt has already been settled");
+
+        uint256 amount = debt.amount;
+        debt.settled = true;
+
+        // Update the debt in the creditor's debtsOwed mapping
+        for (uint256 i = 0; i < debtsOwed[creditor].length; i++) {
+            if (debtsOwed[creditor][i].debtor == msg.sender && debtsOwed[creditor][i].amount == amount) {
+                debtsOwed[creditor][i].settled = true;
+                break;
+            }
+        }
+
+        bobToken.safeTransferFrom(msg.sender, creditor, amount);
+
+        emit DebtSettled(creditor, msg.sender, amount);
+    }
+
+    function getDebtsOwed(address user) external view returns (Debt[] memory) {
+        return debtsOwed[user];
+    }
+
+    function getDebtsToSettle(address user) external view returns (Debt[] memory) {
+        return debtsToSettle[user];
+    }
+}

@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect } from "react";
 import { InheritanceTooltip } from "./InheritanceTooltip";
 import { displayTxResult } from "./utilsDisplay";
@@ -9,6 +7,7 @@ import { useContractRead } from "wagmi";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useAnimationConfig } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
+import { useAccount } from "wagmi";
 
 type DisplayVariableProps = {
   contractAddress: Address;
@@ -25,6 +24,8 @@ export const DisplayVariable = ({
   abi,
   inheritedFrom,
 }: DisplayVariableProps) => {
+  const { address } = useAccount();
+
   const {
     data: result,
     isFetching,
@@ -33,6 +34,7 @@ export const DisplayVariable = ({
     address: contractAddress,
     functionName: abiFunction.name,
     abi: abi,
+    // args: [address], // Pass the connected wallet address as an argument
     onError: error => {
       notification.error(error.message);
     },
