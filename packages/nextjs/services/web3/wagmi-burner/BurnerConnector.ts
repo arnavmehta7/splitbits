@@ -51,6 +51,7 @@ export class BurnerConnector extends Connector<StaticJsonRpcProvider, BurnerConn
   }
 
   async connect(config?: { chainId?: number | undefined } | undefined): Promise<Required<BurnerConnectorData>> {
+    throw new Error("Method not implemented."); // NOTE: THIS needs to be removed
     const chain = this.getChainFromId(config?.chainId);
 
     this.provider = new StaticJsonRpcProvider(chain.rpcUrls.default.http[0]);

@@ -8,7 +8,7 @@ const Home: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/debug");
+    router.push("/main");
   }, [router]);
 
   return null;
