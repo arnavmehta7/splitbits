@@ -9,7 +9,7 @@ export const SwitchTheme = ({ className }: { className?: string }) => {
   const { isDarkMode, toggle } = useDarkMode();
   const isMounted = useIsMounted();
   useEffect(() => {
-  const body = document.body;
+    const body = document.body;
     body.setAttribute("data-theme", isDarkMode ? "scaffoldEthDark" : "scaffoldEth");
   }, [isDarkMode]);
 

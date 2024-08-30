@@ -67,8 +67,7 @@ export const Footer = () => {
               </a> */}
             </div>
             {/* <span>·</span> */}
-            <div className="text-center">
-            </div>
+            <div className="text-center"></div>
           </div>
         </ul>
       </div>

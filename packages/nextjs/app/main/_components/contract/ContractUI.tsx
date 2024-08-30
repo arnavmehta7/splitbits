@@ -1,12 +1,12 @@
 "use client";
 
 import { useReducer } from "react";
+import { ethers } from "ethers";
+import { useAccount, useContractRead, useContractWrite } from "wagmi";
 import { Address, Balance } from "~~/components/scaffold-eth";
 import { useDeployedContractInfo, useNetworkColor } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { ContractName } from "~~/utils/scaffold-eth/contract";
-import { useContractRead, useContractWrite, useAccount } from "wagmi";
-import { ethers } from "ethers";
 
 type ContractUIProps = {
   contractName: ContractName;
@@ -20,12 +20,11 @@ export const ContractUI = ({ contractName, className = "" }: ContractUIProps) =>
   const networkColor = useNetworkColor();
   const { address } = useAccount();
 
-
   const { data: debtsOwed, refetch: refetchDebtsOwed } = useContractRead({
     address: deployedContractData?.address,
     abi: deployedContractData?.abi,
     functionName: "getDebtsOwed",
-    args: [address],
+    args: [address], // @ts-nocheck
     enabled: !!deployedContractData?.address && !!address,
   });
 
@@ -33,7 +32,7 @@ export const ContractUI = ({ contractName, className = "" }: ContractUIProps) =>
     address: deployedContractData?.address,
     abi: deployedContractData?.abi,
     functionName: "getDebtsToSettle",
-    args: [address],
+    args: [address], // @ts-nocheck
     enabled: !!deployedContractData?.address && !!address,
   });
 
@@ -55,23 +54,23 @@ export const ContractUI = ({ contractName, className = "" }: ContractUIProps) =>
     triggerRefreshDebts();
   };
 
-// ... existing code ...
+  // ... existing code ...
 
-const handleSettleDebt = async (creditor: string, debtIndex: number) => {
-  try {
-    await settleDebt({ args: [creditor, debtIndex] });
-    triggerRefreshDebts();
-  } catch (error) {
-    if (error.message.includes("insufficient amount")) {
-      alert("Insufficient BOB. Please fund the wallet to spend the required amount of BOB.");
-    } else {
-      console.error("Error settling debt:", error);
-      alert("Please fund your balance and try again.");
+  const handleSettleDebt = async (creditor: string, debtIndex: number) => {
+    try {
+      await settleDebt({ args: [creditor, debtIndex] });
+      triggerRefreshDebts();
+    } catch (error) {
+      if (error.message.includes("insufficient amount")) {
+        alert("Insufficient BOB. Please fund the wallet to spend the required amount of BOB.");
+      } else {
+        console.error("Error settling debt:", error);
+        alert("Please fund your balance and try again.");
+      }
     }
-  }
-};
+  };
 
-// ... existing code ...
+  // ... existing code ...
 
   if (deployedContractLoading) {
     return (
@@ -129,7 +128,10 @@ const handleSettleDebt = async (creditor: string, debtIndex: number) => {
         <h2 className="text-2xl font-bold mb-4">Debts Owed to Me</h2>
         {debtsOwed?.length ? (
           debtsOwed.map((debt, index) => (
-            <div key={index} className="bg-base-100 border-base-300 border shadow-md shadow-secondary rounded-3xl p-6 mb-6">
+            <div
+              key={index}
+              className="bg-base-100 border-base-300 border shadow-md shadow-secondary rounded-3xl p-6 mb-6"
+            >
               <p>
                 <span className="font-bold">Debtor:</span> <Address address={debt.debtor} />
               </p>
@@ -151,8 +153,11 @@ const handleSettleDebt = async (creditor: string, debtIndex: number) => {
       <div>
         <h2 className="text-2xl font-bold mb-4">Debts I Need to Settle</h2>
         {debtsToSettle?.length ? (
-            debtsToSettle?.map((debt, index) => (
-            <div key={index} className="bg-base-100 border-base-300 border shadow-md shadow-secondary rounded-3xl p-6 mb-6">
+          debtsToSettle?.map((debt, index) => (
+            <div
+              key={index}
+              className="bg-base-100 border-base-300 border shadow-md shadow-secondary rounded-3xl p-6 mb-6"
+            >
               <p>
                 <span className="font-bold">Creditor:</span> <Address address={debt.creditor} />
               </p>
@@ -173,8 +178,7 @@ const handleSettleDebt = async (creditor: string, debtIndex: number) => {
           <div className="bg-base-100 border-base-300 border shadow-md shadow-secondary rounded-3xl p-6 mb-6">
             <p className="text-lg">No debts need to be settled</p>
           </div>
-        )
-      }
+        )}
       </div>
     </div>
   );
