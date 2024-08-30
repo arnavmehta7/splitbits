@@ -66,7 +66,7 @@ const handleSettleDebt = async (creditor: string, debtIndex: number) => {
       alert("Insufficient BOB. Please fund the wallet to spend the required amount of BOB.");
     } else {
       console.error("Error settling debt:", error);
-      alert("An error occurred while settling the debt. Please try again.");
+      alert("Please fund your balance and try again.");
     }
   }
 };
@@ -91,7 +91,7 @@ const handleSettleDebt = async (creditor: string, debtIndex: number) => {
   return (
     <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 ${className}`}>
       <div>
-        <h2 className="text-2xl font-bold mb-4">Contract Details</h2>
+        {/* <h2 className="text-2xl font-bold mb-4">Blockchain Contract</h2>
         <div className="bg-base-100 border-base-300 border shadow-md shadow-secondary rounded-3xl p-6 mb-6">
           <p>
             <span className="font-bold">Address:</span> <Address address={deployedContractData.address} />
@@ -101,7 +101,7 @@ const handleSettleDebt = async (creditor: string, debtIndex: number) => {
               <span className="font-bold">Network:</span> <span style={{ color: networkColor }}>{targetNetwork.name}</span>
             </p>
           )}
-        </div>
+        </div> */}
 
         <h2 className="text-2xl font-bold mb-4">Record Debt</h2>
         <div className="bg-base-100 border-base-300 border shadow-md shadow-secondary rounded-3xl p-6 mb-6">
@@ -127,41 +127,54 @@ const handleSettleDebt = async (creditor: string, debtIndex: number) => {
 
       <div>
         <h2 className="text-2xl font-bold mb-4">Debts Owed to Me</h2>
-        {debtsOwed?.map((debt, index) => (
-          <div key={index} className="bg-base-100 border-base-300 border shadow-md shadow-secondary rounded-3xl p-6 mb-6">
-            <p>
-              <span className="font-bold">Debtor:</span> <Address address={debt.debtor} />
-            </p>
-            <p>
-              <span className="font-bold">Amount:</span> {ethers.formatEther(debt.amount)} BOB
-            </p>
-            <p>
-              <span className="font-bold">Settled:</span> {debt.settled ? "Yes" : "No"}
-            </p>
+        {debtsOwed?.length ? (
+          debtsOwed.map((debt, index) => (
+            <div key={index} className="bg-base-100 border-base-300 border shadow-md shadow-secondary rounded-3xl p-6 mb-6">
+              <p>
+                <span className="font-bold">Debtor:</span> <Address address={debt.debtor} />
+              </p>
+              <p>
+                <span className="font-bold">Amount:</span> {ethers.formatEther(debt.amount)} BOB
+              </p>
+              <p>
+                <span className="font-bold">Settled:</span> {debt.settled ? "Yes" : "No"}
+              </p>
+            </div>
+          ))
+        ) : (
+          <div className="bg-base-100 border-base-300 border shadow-md shadow-secondary rounded-3xl p-6 mb-6">
+            <p className="text-lg">No debts are owed to you</p>
           </div>
-        ))}
+        )}
       </div>
 
       <div>
         <h2 className="text-2xl font-bold mb-4">Debts I Need to Settle</h2>
-        {debtsToSettle?.map((debt, index) => (
-          <div key={index} className="bg-base-100 border-base-300 border shadow-md shadow-secondary rounded-3xl p-6 mb-6">
-            <p>
-              <span className="font-bold">Creditor:</span> <Address address={debt.creditor} />
-            </p>
-            <p>
-              <span className="font-bold">Amount:</span> {ethers.formatEther(debt.amount)} BOB
-            </p>
-            <p>
-              <span className="font-bold">Settled:</span> {debt.settled ? "Yes" : "No"}
-            </p>
-            {!debt.settled && (
-              <button className="btn btn-primary mt-4" onClick={() => handleSettleDebt(debt.creditor, index)}>
-                Settle Debt
-              </button>
-            )}
+        {debtsToSettle?.length ? (
+            debtsToSettle?.map((debt, index) => (
+            <div key={index} className="bg-base-100 border-base-300 border shadow-md shadow-secondary rounded-3xl p-6 mb-6">
+              <p>
+                <span className="font-bold">Creditor:</span> <Address address={debt.creditor} />
+              </p>
+              <p>
+                <span className="font-bold">Amount:</span> {ethers.formatEther(debt.amount)} BOB
+              </p>
+              <p>
+                <span className="font-bold">Settled:</span> {debt.settled ? "Yes" : "No"}
+              </p>
+              {!debt.settled && (
+                <button className="btn btn-primary mt-4" onClick={() => handleSettleDebt(debt.creditor, index)}>
+                  Settle Debt
+                </button>
+              )}
+            </div>
+          ))
+        ) : (
+          <div className="bg-base-100 border-base-300 border shadow-md shadow-secondary rounded-3xl p-6 mb-6">
+            <p className="text-lg">No debts need to be settled</p>
           </div>
-        ))}
+        )
+      }
       </div>
     </div>
   );
